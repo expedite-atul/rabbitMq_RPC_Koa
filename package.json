@@ -1,0 +1,32 @@
+{
+  "name": "rabbitmq-poc",
+  "version": "1.0.0",
+  "description": "rabbitMq rpc implementation using koa-js",
+  "main": "app.ts",
+  "scripts": {
+    "start": "tsc && export NODE_ENV=local && node build/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rabbitMq",
+    "rpc",
+    "koa"
+  ],
+  "author": "ATUL SINGH",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.5",
+    "config": "^3.3.0",
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.8",
+    "mongoose": "^5.9.6",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.5.13",
+    "@types/config": "0.0.36",
+    "@types/koa": "^2.11.2",
+    "@types/koa-router": "^7.4.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "port": 3002,
+  "dbConfig": {
+    "host": "localhost",
+    "port": 27017,
+    "dbName": "rabbitMqRPC",
+    "dbUrl": "mongodb://localhost:27017/rabbitMqRPC"
+  },
+  "rabbitMq": {
+    "url": "amqp://localhost"
+  }
+}

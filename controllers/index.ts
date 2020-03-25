@@ -1,0 +1,1 @@
+export { fibController } from "./fib/fib.controller";
