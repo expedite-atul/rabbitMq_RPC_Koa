@@ -4,8 +4,8 @@ const connection_1 = require("./connection");
 class RabbitMqProducerClass {
     async insertInQueue(queueName, data) {
         try {
-            console.log("inserting in ==========>", queueName);
-            connection_1.channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)), { persistent: true });
+            console.log(`inserting in queue ==> ${queueName} with corr ==> ${connection_1.corr}`);
+            connection_1.channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)), { correlationId: connection_1.corr, replyTo: 'rpc_queue1' }, { persistent: true });
         }
         catch (error) {
             console.log(`Error while inserting in rabbitmq queue ==> ${error}`);
