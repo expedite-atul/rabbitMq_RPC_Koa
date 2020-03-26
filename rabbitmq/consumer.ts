@@ -1,5 +1,5 @@
-import { channel, corr } from "./connection";
 import { calcFib } from "../controllers/fib/fib.controller";
+import { rabbitMq } from "./connection";
 
 class RabbitMqConsumerClass {
     /**
@@ -8,17 +8,19 @@ class RabbitMqConsumerClass {
      */
     async consumeFromQueue(queueName: string) {
         try {
-            let data = await channel.get(queueName);
+            let data = await rabbitMq.channel.get(queueName);
             if (data) {
-                channel.consume(queueName, async (data) => {
-                    const id = parseInt(data.content.toString(), 10);
-                    if (data.properties.correlationId === corr) {
-                        console.log(id, data.properties.correlationId);
-                        console.log(corr, 'coorelationId')
+                rabbitMq.channel.consume(queueName, async (data) => {
+                    if (data.properties.correlationId === rabbitMq.corr) {
+                        const n = parseInt(data.content.toString(), 10);
+                        console.log(n, data.properties.correlationId);
                         console.log(`[.] Got ${data.content.toString()}`);
-                        setTimeout(() => { channel.close(); process.exit(0) }, 500);
+                        let result = await calcFib(n);
+                        console.log(result, 'result');
+                        setTimeout(() => { rabbitMq.channel.close(); process.exit(0) }, 500);
                     }
-                }, { noAck: true });
+                    { noAck: true }
+                });
             } else {
                 console.log(`ugh-oh! Empty queue!`);
             }

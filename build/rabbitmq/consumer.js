@@ -1,20 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const fib_controller_1 = require("../controllers/fib/fib.controller");
 const connection_1 = require("./connection");
 class RabbitMqConsumerClass {
     async consumeFromQueue(queueName) {
         try {
-            let data = await connection_1.channel.get(queueName);
+            let data = await connection_1.rabbitMq.channel.get(queueName);
             if (data) {
-                connection_1.channel.consume(queueName, async (data) => {
-                    const id = parseInt(data.content.toString(), 10);
-                    if (data.properties.correlationId === connection_1.corr) {
-                        console.log(id, data.properties.correlationId);
-                        console.log(connection_1.corr, 'coorelationId');
+                connection_1.rabbitMq.channel.consume(queueName, async (data) => {
+                    if (data.properties.correlationId === connection_1.rabbitMq.corr) {
+                        const n = parseInt(data.content.toString(), 10);
+                        console.log(n, data.properties.correlationId);
                         console.log(`[.] Got ${data.content.toString()}`);
-                        setTimeout(function () { connection_1.channel.close(); process.exit(0); }, 500);
+                        let result = await fib_controller_1.calcFib(n);
+                        console.log(result, 'result');
+                        setTimeout(() => { connection_1.rabbitMq.channel.close(); process.exit(0); }, 500);
                     }
-                }, { noAck: true });
+                    {
+                        noAck: true;
+                    }
+                });
             }
             else {
                 console.log(`ugh-oh! Empty queue!`);
