@@ -4,8 +4,9 @@ import { rabbitMqProducer, rabbitMqConsumer } from "../../rabbitmq";
 class FibControllers {
   /**
    * @description get token from deliveryApi
+   * @param ctx Context
    */
-  async getfib(ctx: Context): Promise<number> {
+  async getfib(ctx: Context) {
     try {
       await rabbitMqProducer.insertInQueue('rpc_queue1', ctx.request.query);
       let response = await rabbitMqConsumer.consumeFromQueue('rpc_queue1');
