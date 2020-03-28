@@ -11,16 +11,20 @@ class RabbitMqConsumerClass {
             let data = await rabbitMq.channel.get(queueName);
             if (data) {
                 rabbitMq.channel.consume(queueName, async (data) => {
-                    if (data.properties.correlationId === rabbitMq.corr) {
-                        const n = parseInt(data.content.toString(), 10);
-                        console.log(n, data.properties.correlationId);
-                        console.log(`[.] Got ${data.content.toString()}`);
-                        let result = await calcFib(n);
-                        console.log(result, 'result');
-                        setTimeout(() => { rabbitMq.channel.close(); process.exit(0) }, 500);
-                    }
-                    { noAck: true }
-                });
+                    const n = parseInt(data.content.toString(), 10);
+                    console.log(n, data.properties.correlationId);
+                    console.log(`[.] Got ${data.content.toString()}`);
+                    let result = await calcFib(n);
+                    console.log(result, 'result');
+                    // setTimeout(() => { rabbitMq.channel.close(); process.exit(0) }, 500);
+
+                    rabbitMq.channel.sendToQueue(data.properties.replyTo,
+                        Buffer.from(result.toString()), {
+                        correlationId: data.properties.correlationId
+                    });
+                }
+                    // , { noAck: true }
+                );
             } else {
                 console.log(`ugh-oh! Empty queue!`);
             }
