@@ -8,10 +8,13 @@ class FibControllers {
    */
   async getfib(ctx: Context) {
     try {
-      await rabbitMqProducer.insertInQueue('rpc_queue1', ctx.request.query);
-      let response = await rabbitMqConsumer.consumeFromQueue('rpc_queue1');
+      let q = await rabbitMqProducer.insertInQueue('queue', ctx.request.query);
+      console.log("back data=====", q);
+      let response = await rabbitMqProducer.getResponse(q)
+      console.log("response", response);
       return response;
     } catch (error) {
+      console.error(`we have an error in fib controller ==> ${error}`);
       return Promise.reject(error);
     }
   }
