@@ -6,7 +6,6 @@ import connectDatabase from './db/mongoose';
 
 const app = new Koa();
 app.use(routes());
-
 (async () => {
     try {
         const port = config.get<string>('port');
@@ -16,5 +15,6 @@ app.use(routes());
         console.log(`server started successfully`);
     } catch (error) {
         console.error(`We have an error in server initialization ==> ${error}`);
+        Promise.reject(error);
     }
-})()
+})();
